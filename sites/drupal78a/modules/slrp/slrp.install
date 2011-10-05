@@ -1,0 +1,69 @@
+<?php
+
+/**
+ * @file
+ * Install, update and uninstall functions for the slrp module.
+ */
+
+/**
+ * Implements hook_schema().
+ */
+function slrp_schema() {
+
+  $schema['slrp_reference'] = array(
+    'description' => 'TODO: please describe this table!',
+    'fields' => array(
+      'refid' => array(
+        'description' => 'TODO: please describe this field!',
+        'type' => 'int',
+        'not null' => TRUE,
+      ),
+      'type' => array(
+        'description' => 'TODO: please describe this field!',
+        'type' => 'varchar',
+        'length' => '32',
+        'not null' => TRUE,
+      ),
+      'author' => array(
+        'description' => 'TODO: please describe this field!',
+        'type' => 'varchar',
+        'length' => '128',
+        'not null' => TRUE,
+      ),
+      'title' => array(
+        'description' => 'TODO: please describe this field!',
+        'type' => 'varchar',
+        'length' => '128',
+        'not null' => TRUE,
+      ),
+      'year' => array(
+        'description' => 'TODO: please describe this field!',
+        'type' => 'int',
+        'size' => 'small',
+        'not null' => TRUE,
+      ),
+      'publisher' => array(
+        'description' => 'TODO: please describe this field!',
+        'type' => 'varchar',
+        'length' => '64',
+        'not null' => TRUE,
+      ),
+    ),
+    'primary key' => array('refid'),
+  );
+  return $schema;
+}
+
+/**
+ * Implements hook_install().
+ */
+function slrp_install() {
+  
+}
+
+/**
+ * Implements hook_uninstall().
+ */
+function slrp_uninstall() {
+  
+}

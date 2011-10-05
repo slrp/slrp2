@@ -1,0 +1,5 @@
+name = SLRP
+description = Systematic Literature Review Platform
+package = SLRP
+core = 7.x
+files[] = slrp.module

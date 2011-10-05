@@ -1,0 +1,11 @@
+<?php
+// $Id$
+
+function first_install(){
+	
+}
+
+function first_uninstall(){
+	
+}
+

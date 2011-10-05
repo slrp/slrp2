@@ -1,0 +1,9 @@
+; $Id$
+name = First
+description = A first project
+version = 7.0.2
+package = Drupal Development 7
+core = 7.x
+files[] = first.module
+files[] = first.test
+

@@ -1,0 +1,305 @@
+<?php
+
+require_once 'Structures\BibTex.php';
+
+/**
+ * @file
+ * Use this module to learn about Drupal's menu system.
+ */
+function slrp_menu() {
+  $items['slrp_add_ref'] = array(
+    'title' => 'Add Reference',
+    'page callback' => 'drupal_get_form',
+    'page arguments' => array('slrp_ref_form'),
+    'access callback' => TRUE,
+    'type' => MENU_NORMAL_ITEM,
+    'menu_name'=>'main-menu',
+  );
+  
+  $items['slrp_list_ref'] = array(
+    'title' => 'Reference List',
+    'page callback' => 'slrp_list_ref_tableselect',
+    'access callback' => TRUE,
+    'type' => MENU_NORMAL_ITEM,
+     'menu_name'=>'main-menu',
+  );
+    
+  /*
+    $items['slrp3'] = array(
+    'title' => 'Greetingxx4',
+    'page callback' => 'drupal_get_form',
+    'page arguments' => array('slrp_ref_form'),
+    'access callback' => TRUE,
+    'type' => MENU_NORMAL_ITEM,
+    //'menu_name' => 'artwork/recent/dfdf',
+    );
+    $items['slrp2'] = array(
+    'title' => 'Greetingxx2',
+    'page callback' => 'drupal_get_form',
+    'page arguments' => array('slrp_ref_form'),
+    'access callback' => TRUE,
+    'type' => MENU_NORMAL_ITEM,
+    //'menu_name' => 'artwork/recent/dfdf',
+    );
+
+    $items['slrp5'] = array(
+    'title' => 'Greetingxx5',
+    'page callback' => 'drupal_get_form',
+    'page arguments' => array('slrp_ref_form'),
+    'access callback' => TRUE,
+    'type' => MENU_NORMAL_ITEM,
+    'menu_name' => 'menu-structure',
+    );
+
+    $items['admin/slrp6'] = array(
+    'title' => 'Greetingxx6',
+    'page callback' => 'drupal_get_form',
+    'page arguments' => array('slrp_ref_form'),
+    'access callback' => TRUE,
+    'type' => MENU_NORMAL_ITEM,
+    'menu_name' => 'management',
+    );
+   */
+  /*
+    $items['slrptest']=array(
+    'title'=>'Greeting',
+    'page callback'=> 'slrp_test',
+    'access callback'=> TRUE,
+    'type'=>MENU_CALLBACK,
+    );
+   */
+
+  return $items;
+}
+
+
+function example_elements_form() {
+  $form = array();
+  
+  $header = array(
+    'title' => array('field' => 'n.title', 'data' => t('Title')),
+    'author' => array('field' => 'u.name', 'data' => t('Author')),
+  );
+
+  // Note the tablesort_sql($header).
+  $query = "SELECT n.nid, n.title, u.name FROM {node} n INNER JOIN {users} u ON n.uid = u.uid". tablesort_sql($header);
+
+  $result = pager_query(db_rewrite_sql($query));
+
+  $options = array();
+
+  while($partial_node = db_fetch_object($result)) {
+    $options[$partial_node->nid] = array(
+      'title' => check_plain($partial_node->title),
+      'author' => check_plain($partial_node->name),
+    );
+  }
+  
+  $form['nodes'] = array(
+    '#type' => 'tableselect',
+    '#header' => $header,
+    '#options' => $options,
+    '#empty' => t('No items available'),
+  );
+
+  $form['pager'] = array('#value' => theme('pager'));
+
+  $form['submit'] = array(
+    '#type' => 'submit',
+    '#value' => t('Submit'),
+  );
+
+  return $form;
+}
+/**
+ * 
+ */
+function slrp_list_ref_tableselect () {
+  $form = array();
+  $header = array(
+    'title'=>t('Title'),
+    'author'=>t('Author'),
+  );
+  $result = db_query("SELECT * FROM {slrp_reference} ORDER BY refid", array(), array('fetch' => PDO::FETCH_ASSOC));
+  
+  $rows = array();
+  $number=1;
+  foreach ($result as $ref) {
+    
+    $row = array(array('data'=>$number));
+    $row[] = array('data'=>$ref->type);
+    $row[] = array('data'=>$ref->author);
+    $row[] = array('data'=>$ref->title);
+    $row[] = array('data'=>$ref->year);
+    $row[] = array('data'=>$ref->publisher); 
+    $rows[] = $row;
+    $number++;
+  }
+  return theme_table(array('header' => $header, 'rows' => $rows,'attributes'=>array()));
+  
+  }
+
+/**
+ * Page callback.
+ */
+function slrp_list_ref($order = 'refid', $sort='asc') {
+  
+  
+  
+  //$result = db_query("SELECT * FROM {slrp_reference} ORDER BY :order :sort", array(':order'=>$order,'sort'=>$sort), array('fetch' => PDO::FETCH_ASSOC));
+  
+  $header = array(
+    array('data'=>t('#'),'field'=>'refid','sort'=>'asc'),
+    array('data'=>t('Type'),'field'=>'type'),
+    array('data'=>t('Author'),'field'=>'author'),
+    array('data'=>t('Title'),'field'=>'title'),
+    array('data'=>t('Year'),'field'=>'year'),
+    array('data'=>t('Publisher'),'field'=>'publisher'),
+    );
+  
+  $query = db_select('slrp_reference','s')->fields('s')
+      ->extend('TableSort')
+      ->orderByHeader($header)
+      ;
+  //    mdpm($query,'$query');
+  $result=$query->execute();
+ // mdpm($result);
+  $rows = array();
+  $number=1;
+  
+  foreach ($result as $ref) {
+    
+    $row = array(array('data'=>$number));
+    $row[] = array('data'=>$ref->type);
+    $row[] = array('data'=>$ref->author);
+    $row[] = array('data'=>$ref->title);
+    $row[] = array('data'=>$ref->year);
+    $row[] = array('data'=>$ref->publisher); 
+    $rows[] = $row;
+    $number++;
+  }
+
+  return theme_table(array('header' => $header, 'rows' => $rows,'attributes'=>array()));
+  //$pageContent = t('List of added references:');
+
+  //return $pageContent;
+}
+
+
+
+function slrp_ref_form() {
+  $form = array();
+
+  $form['#attributes']['enctype'] = 'multipart/form-data';
+
+  $form['file_upload'] = array(
+    '#title' => t('Upload BibTex file'),
+    '#type' => 'file',
+  );
+
+  $form['group_a']['city'] = array(
+    '#type' => 'textfield',
+    '#title' => t('City Name:'),
+    '#size' => 20,
+  );
+  $form['group_a']['postcode'] = array(
+    '#type' => 'textfield',
+    '#title' => t('Postcode:'),
+    '#size' => 20,
+  );
+
+
+  $form['name'] = array(
+    '#type' => 'textfield',
+    '#title' => t('Name:'),
+    '#default_value' => 'name',
+    '#prefix' => '<a name="the_name"></a>',
+  );
+  $form['posting_settings'] = array(
+    '#type' => 'radios',
+    '#title' => t('Preview comment'),
+    //'#default_value' => variable_get('comment_preview', 1),
+    '#options' => array(t('Optional'), t('Required')),
+  );
+
+
+  $form['sex'] = array(
+    '#type' => 'radios',
+    '#title' => t('Sex:'),
+    '#title_display' => 'before',
+    '#default_value' => 'Male',
+    '#options' => array(t('Male'), t('Female')),
+  );
+
+
+
+  $form['submit'] = array(
+    '#type' => 'submit',
+    '#value' => t('Submit'),
+  );
+
+  return $form;
+}
+
+function slrp_ref_form_submit($form, &$form_state) {
+  $validators = array();
+  //$dest = 'sites/default/files/mytmp';
+  //$file = file_save_upload('file_upload', $validators, $dest);
+  $file = file_save_upload('file_upload', $validators, NULL);
+  mdpm($file, '$file');
+
+  //$file will be 0 if the upload doesn't exist, or the $dest directory
+  //isn't writable
+  if ($file == true) {
+
+    $fileUri = $file->uri;
+    $bibtex = new Structures_BibTex(array('extractAuthors'=> false));
+    $ret = $bibtex->loadFile($fileUri);
+
+    $pear = new PEAR();
+    if ($pear->isError($ret)) {
+      die($ret->getMessage());
+    }
+    $bibtex->parse();
+
+    mdpm($bibtex->data, '$bibtex->data');
+    save_bibtex_reference($bibtex->data);
+    drupal_set_message("The Reference has been saved.");
+    $form_state['redirect']='slrp_list_ref_tableselect';
+    //bibtex->data
+  } else {
+    form_set_error('myform', t("Failed to save the file."));
+  }
+}
+
+function save_bibtex_reference($data) {
+  $table="slrp_reference";
+  $record=new stdClass();
+  $dataEntry = $data[0];
+  foreach ($dataEntry as $key => $value) {
+    if($key == "entryType") {
+      $record->type=$value;
+    }else if($key == "author"){
+      $record->author=$value;
+    }else if($key == "title") {
+      $record->title=$value;
+    }else if($key == "year") {
+      $record->year=$value;
+    }else if($key == "publisher") {
+      $record->publisher=$value;
+    }
+  }
+  drupal_write_record($table, $record);
+  watchdog("slrp", "bibtex Reference is saved.");
+}
+
+function secondary_submit_function() {
+  return t('cool!');
+}
+
+function mdpm($input, $name = NULL) {
+  if (module_exists('devel')) {
+    dpm($input, $name);
+  }
+}
+
