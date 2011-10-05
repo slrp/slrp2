@@ -13,17 +13,17 @@ function slrp_menu() {
     'page arguments' => array('slrp_ref_form'),
     'access callback' => TRUE,
     'type' => MENU_NORMAL_ITEM,
-    'menu_name'=>'main-menu',
+    'menu_name' => 'main-menu',
   );
-  
+
   $items['slrp_list_ref'] = array(
     'title' => 'Reference List',
     'page callback' => 'slrp_list_ref_tableselect',
     'access callback' => TRUE,
     'type' => MENU_NORMAL_ITEM,
-     'menu_name'=>'main-menu',
+    'menu_name' => 'main-menu',
   );
-    
+
   /*
     $items['slrp3'] = array(
     'title' => 'Greetingxx4',
@@ -72,29 +72,28 @@ function slrp_menu() {
   return $items;
 }
 
-
 function example_elements_form() {
   $form = array();
-  
+
   $header = array(
     'title' => array('field' => 'n.title', 'data' => t('Title')),
     'author' => array('field' => 'u.name', 'data' => t('Author')),
   );
 
   // Note the tablesort_sql($header).
-  $query = "SELECT n.nid, n.title, u.name FROM {node} n INNER JOIN {users} u ON n.uid = u.uid". tablesort_sql($header);
+  $query = "SELECT n.nid, n.title, u.name FROM {node} n INNER JOIN {users} u ON n.uid = u.uid" . tablesort_sql($header);
 
   $result = pager_query(db_rewrite_sql($query));
 
   $options = array();
 
-  while($partial_node = db_fetch_object($result)) {
+  while ($partial_node = db_fetch_object($result)) {
     $options[$partial_node->nid] = array(
       'title' => check_plain($partial_node->title),
       'author' => check_plain($partial_node->name),
     );
   }
-  
+
   $form['nodes'] = array(
     '#type' => 'tableselect',
     '#header' => $header,
@@ -111,81 +110,88 @@ function example_elements_form() {
 
   return $form;
 }
+
 /**
  * 
  */
-function slrp_list_ref_tableselect () {
+function slrp_list_ref_tableselect() {
   $form = array();
-  $header = array(
-    'title'=>t('Title'),
-    'author'=>t('Author'),
+  $options = array();
+  $options[0]['title'] = "A red row";
+  $options[0]['#attributes'] = array('class' => array('red-row'));
+  $options[1]['title'] = "A blue row";
+  $options[1]['#attributes'] = array('class' => array('blue-row'));
+  $form['myselector'] = array(
+    '#type' => 'tableselect',
+    '#title' => 'My Selector',
+    '#options' => $options,
   );
-  $result = db_query("SELECT * FROM {slrp_reference} ORDER BY refid", array(), array('fetch' => PDO::FETCH_ASSOC));
-  
+  $header = array(
+    'title' => t('Title'),
+    'author' => t('Author'),
+  );
+  $result = db_query("SELECT * FROM {slrp_reference} ORDER BY refid", array(), array('fetch' => PDO::FETCH_OBJ));
+
   $rows = array();
-  $number=1;
+  $number = 1;
   foreach ($result as $ref) {
-    
-    $row = array(array('data'=>$number));
-    $row[] = array('data'=>$ref->type);
-    $row[] = array('data'=>$ref->author);
-    $row[] = array('data'=>$ref->title);
-    $row[] = array('data'=>$ref->year);
-    $row[] = array('data'=>$ref->publisher); 
+
+    $row = array(array('data' => $number));
+    $row[] = array('data' => $ref->type);
+    $row[] = array('data' => $ref->author);
+    $row[] = array('data' => $ref->title);
+    $row[] = array('data' => $ref->year);
+    $row[] = array('data' => $ref->publisher);
     $rows[] = $row;
     $number++;
   }
-  return theme_table(array('header' => $header, 'rows' => $rows,'attributes'=>array()));
-  
-  }
+  return theme_tableselect(array('header' => $header, 'rows' => $rows, 'attributes' => array(), 'element' => array()));
+}
 
 /**
  * Page callback.
  */
 function slrp_list_ref($order = 'refid', $sort='asc') {
-  
-  
-  
+
+
+
   //$result = db_query("SELECT * FROM {slrp_reference} ORDER BY :order :sort", array(':order'=>$order,'sort'=>$sort), array('fetch' => PDO::FETCH_ASSOC));
-  
+
   $header = array(
-    array('data'=>t('#'),'field'=>'refid','sort'=>'asc'),
-    array('data'=>t('Type'),'field'=>'type'),
-    array('data'=>t('Author'),'field'=>'author'),
-    array('data'=>t('Title'),'field'=>'title'),
-    array('data'=>t('Year'),'field'=>'year'),
-    array('data'=>t('Publisher'),'field'=>'publisher'),
-    );
-  
-  $query = db_select('slrp_reference','s')->fields('s')
+    array('data' => t('#'), 'field' => 'refid', 'sort' => 'asc'),
+    array('data' => t('Type'), 'field' => 'type'),
+    array('data' => t('Author'), 'field' => 'author'),
+    array('data' => t('Title'), 'field' => 'title'),
+    array('data' => t('Year'), 'field' => 'year'),
+    array('data' => t('Publisher'), 'field' => 'publisher'),
+  );
+
+  $query = db_select('slrp_reference', 's')->fields('s')
       ->extend('TableSort')
       ->orderByHeader($header)
-      ;
+  ;
   //    mdpm($query,'$query');
-  $result=$query->execute();
- // mdpm($result);
+  $result = $query->execute();
+  // mdpm($result);
   $rows = array();
-  $number=1;
-  
+  $number = 1;
+
   foreach ($result as $ref) {
-    
-    $row = array(array('data'=>$number));
-    $row[] = array('data'=>$ref->type);
-    $row[] = array('data'=>$ref->author);
-    $row[] = array('data'=>$ref->title);
-    $row[] = array('data'=>$ref->year);
-    $row[] = array('data'=>$ref->publisher); 
+
+    $row = array(array('data' => $number));
+    $row[] = array('data' => $ref->type);
+    $row[] = array('data' => $ref->author);
+    $row[] = array('data' => $ref->title);
+    $row[] = array('data' => $ref->year);
+    $row[] = array('data' => $ref->publisher);
     $rows[] = $row;
     $number++;
   }
 
-  return theme_table(array('header' => $header, 'rows' => $rows,'attributes'=>array()));
+  return theme_table(array('header' => $header, 'rows' => $rows, 'attributes' => array()));
   //$pageContent = t('List of added references:');
-
   //return $pageContent;
 }
-
-
 
 function slrp_ref_form() {
   $form = array();
@@ -253,7 +259,7 @@ function slrp_ref_form_submit($form, &$form_state) {
   if ($file == true) {
 
     $fileUri = $file->uri;
-    $bibtex = new Structures_BibTex(array('extractAuthors'=> false));
+    $bibtex = new Structures_BibTex(array('extractAuthors' => false));
     $ret = $bibtex->loadFile($fileUri);
 
     $pear = new PEAR();
@@ -265,7 +271,7 @@ function slrp_ref_form_submit($form, &$form_state) {
     mdpm($bibtex->data, '$bibtex->data');
     save_bibtex_reference($bibtex->data);
     drupal_set_message("The Reference has been saved.");
-    $form_state['redirect']='slrp_list_ref_tableselect';
+    $form_state['redirect'] = 'slrp_list_ref_tableselect';
     //bibtex->data
   } else {
     form_set_error('myform', t("Failed to save the file."));
@@ -273,20 +279,20 @@ function slrp_ref_form_submit($form, &$form_state) {
 }
 
 function save_bibtex_reference($data) {
-  $table="slrp_reference";
-  $record=new stdClass();
+  $table = "slrp_reference";
+  $record = new stdClass();
   $dataEntry = $data[0];
   foreach ($dataEntry as $key => $value) {
-    if($key == "entryType") {
-      $record->type=$value;
-    }else if($key == "author"){
-      $record->author=$value;
-    }else if($key == "title") {
-      $record->title=$value;
-    }else if($key == "year") {
-      $record->year=$value;
-    }else if($key == "publisher") {
-      $record->publisher=$value;
+    if ($key == "entryType") {
+      $record->type = $value;
+    } else if ($key == "author") {
+      $record->author = $value;
+    } else if ($key == "title") {
+      $record->title = $value;
+    } else if ($key == "year") {
+      $record->year = $value;
+    } else if ($key == "publisher") {
+      $record->publisher = $value;
     }
   }
   drupal_write_record($table, $record);
