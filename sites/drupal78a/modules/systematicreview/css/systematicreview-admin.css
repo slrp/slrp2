@@ -1,0 +1,91 @@
+
+.systematicreview-submission-info {
+  padding: 10px;
+}
+.systematicreview-submission-info .user-picture {
+  float: right;
+  margin-left: 10px;
+}
+.systematicreview-submission-info-text {
+  overflow: hidden;
+}
+.systematicreview-submission-actions {
+  float: left;
+}
+.systematicreview-submission-navigation {
+  text-align: right;
+}
+.systematicreview-submission-next {
+  margin-left: 20px;
+}
+.systematicreview-component-select-wrapper {
+  max-height: 300px;
+  overflow: auto;
+}
+.systematicreview-component-select-table table {
+  margin: 0;
+}
+.systematicreview-component-select-table tr.selected td,
+.systematicreview-component-select-table tr.selected td.active {
+  background: inherit;
+  color: inherit;
+}
+.form-item .systematicreview-component-select-table .description {
+  font-size: inherit;
+}
+.form-item .systematicreview-component-select-table input {
+  width: 12px;
+  height: 12px;
+  margin: 0 2px 2px;
+}
+.systematicreview-select-list-format table {
+  border: 1px solid;
+  width: auto;
+  font-size: 90%;
+}
+.systematicreview-select-list-format td,
+.systematicreview-select-list-format th {
+  border: 1px solid;
+}
+tr.systematicreview-pagebreak td {
+  border-top: 2px dotted #999;
+}
+td.systematicreview-pagebreak {
+  font-weight: bold;
+}
+.systematicreview-options-element thead {
+  display: none;
+}
+.systematicreview-options-element fieldset {
+  border: none;
+  background: none;
+  margin: 0;
+  padding: 0;
+}
+.systematicreview-options-element fieldset legend {
+  display: none;
+}
+.systematicreview-checkbox {
+  text-align: center;
+  width: 40px;
+}
+.systematicreview-container-inline div,
+.systematicreview-container-inline div.form-item {
+  display: inline;
+}
+.systematicreview-default-value {
+  color: #999;
+}
+.systematicreview-results-per-page a.selected {
+  font-weight: bold;
+}
+html.js fieldset.systematicreview-position,
+html.js div.systematicreview-position {
+  display: none;
+}
+tr.systematicreview-add-form .tabledrag-changed {
+  display: none;
+}
+#systematicreview-components tr.systematicreview-add-form {
+  background-color: inherit;
+}

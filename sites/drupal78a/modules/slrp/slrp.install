@@ -15,7 +15,7 @@ function slrp_schema() {
     'fields' => array(
       'refid' => array(
         'description' => 'TODO: please describe this field!',
-        'type' => 'int',
+        'type' => 'serial',
         'not null' => TRUE,
       ),
       'type' => array(
@@ -27,13 +27,13 @@ function slrp_schema() {
       'author' => array(
         'description' => 'TODO: please describe this field!',
         'type' => 'varchar',
-        'length' => '128',
+        'length' => '256',
         'not null' => TRUE,
       ),
       'title' => array(
         'description' => 'TODO: please describe this field!',
         'type' => 'varchar',
-        'length' => '128',
+        'length' => '256',
         'not null' => TRUE,
       ),
       'year' => array(
@@ -46,11 +46,12 @@ function slrp_schema() {
         'description' => 'TODO: please describe this field!',
         'type' => 'varchar',
         'length' => '64',
-        'not null' => TRUE,
+        'not null' => FALSE,
       ),
     ),
     'primary key' => array('refid'),
   );
+
   return $schema;
 }
 

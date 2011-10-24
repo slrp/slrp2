@@ -1,0 +1,23 @@
+; $Id: $
+name = SystematicReview
+description = Provides researchers methodological support for creating, conducting, and publishing systematic reviews.
+core = 7.x
+package = SystematicReview
+configure = admin/config/content/systematicreview
+
+; Files that contain classes:
+files[] = includes/systematicreview.export.inc
+
+files[] = views/systematicreview_handler_field_form_body.inc
+files[] = views/systematicreview_handler_field_is_draft.inc
+files[] = views/systematicreview_handler_field_node_link_edit.inc
+files[] = views/systematicreview_handler_field_node_link_results.inc
+files[] = views/systematicreview_handler_field_submission_count.inc
+files[] = views/systematicreview_handler_field_submission_link.inc
+files[] = views/systematicreview_handler_filter_is_draft.inc
+files[] = views/systematicreview.views.inc
+
+version = "7.x-1.1"
+core = "7.x"
+project = "systematicreview"
+datestamp = "1317881383"
